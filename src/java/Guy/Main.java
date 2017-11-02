@@ -3,6 +3,7 @@ package Guy;
 import Agents.AgentBuy;
 import Agents.AgentSell;
 import jade.wrapper.StaleProxyException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -15,6 +16,8 @@ public class Main {
      */
     public static void main(String[] arg) throws StaleProxyException, InterruptedException {
 
+        Logger logger = Logger.getLogger("Main");
+        logger.trace("Start Method");
         String[] args = {"java", "php", "c"};
 
         AgentSell s1 = new AgentSell();
@@ -40,6 +43,7 @@ public class Main {
         b2.setArguments(args);
         InitAgent.init(b2, "b2", "Buyer2");
 
+        logger.trace("Ended Method");
     }
 
 }

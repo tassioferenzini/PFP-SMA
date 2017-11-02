@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -23,17 +24,15 @@ import javax.swing.JTextField;
  */
 public class SellerGui extends JFrame {
 
+    public static Logger logger = Logger.getLogger("DAO");
     private static final long serialVersionUID = 1L;
-
     private AgentSell myAgent;
-
     private JTextField titleField, priceField;
 
     public SellerGui(AgentSell a) {
         super(a.getLocalName());
-
+        logger.trace("Start Method");
         myAgent = a;
-
         JPanel p = new JPanel();
         p.setLayout(new GridLayout(2, 2));
         p.add(new JLabel("Product Title:"));
@@ -43,7 +42,6 @@ public class SellerGui extends JFrame {
         priceField = new JTextField(15);
         p.add(priceField);
         getContentPane().add(p, BorderLayout.CENTER);
-
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -63,7 +61,6 @@ public class SellerGui extends JFrame {
         p = new JPanel();
         p.add(addButton);
         getContentPane().add(p, BorderLayout.SOUTH);
-
         // Make the agent terminate when the user closes
         // the GUI using the button on the upper right corner
         addWindowListener(new WindowAdapter() {
@@ -72,16 +69,18 @@ public class SellerGui extends JFrame {
                 myAgent.doDelete();
             }
         });
-
         setResizable(false);
+        logger.trace("Ended Method");
     }
 
     public void showGui() {
+        logger.trace("Start Method");
         pack();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int centerX = (int) screenSize.getWidth() / 2;
         int centerY = (int) screenSize.getHeight() / 2;
         setLocation(centerX - getWidth() / 2, centerY - getHeight() / 2);
         super.setVisible(true);
+        logger.trace("Ended Method");
     }
 }

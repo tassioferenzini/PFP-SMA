@@ -17,8 +17,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -26,8 +25,8 @@ import java.util.logging.Logger;
  */
 public class AgentSell extends Agent {
 
+    private static final Logger logger = Logger.getLogger("Functions");
     private static final long serialVersionUID = 1L;
-
     private Hashtable<String, Integer> catalogue;
     private SellerGui myGui;
 
@@ -35,12 +34,10 @@ public class AgentSell extends Agent {
 
     @Override
     protected void setup() {
-
+        logger.trace("Start Method");
         catalogue = new Hashtable<String, Integer>();
-
         myGui = new SellerGui(this);
         myGui.showGui();
-
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -51,34 +48,31 @@ public class AgentSell extends Agent {
             DFService.register(this, dfd);
             ag.setName(getAID().getName());
             ag.setTypeAgent(sd.getType());
-
             AgentPSSDAO.getInstance().save(ag);
-
             System.out.println("The Agent " + ag.getIdAgent() + " of type " + ag.getTypeAgent() + " was started in system");
-
         } catch (FIPAException fe) {
-            Logger.getLogger(AgentBuy.class.getName()).log(Level.SEVERE, null, fe);
+            logger.error("Unexpected error", fe);
         }
-
         addBehaviour(new OfferRequestsServer());
-
         addBehaviour(new PurchaseOrdersServer());
+        logger.trace("Ended Method");
     }
 
     @Override
     protected void takeDown() {
+        logger.trace("Start Method");
         try {
             DFService.deregister(this);
         } catch (FIPAException fe) {
-            Logger.getLogger(AgentBuy.class.getName()).log(Level.SEVERE, null, fe);
+            logger.error("Unexpected error", fe);
         }
-
         myGui.dispose();
-
         System.out.println("Seller-agent " + getAID().getName() + " terminating.");
+        logger.trace("Ended Method");
     }
 
     public void updateCatalogue(final String title, final int price) {
+        logger.trace("Start Method");
         addBehaviour(new OneShotBehaviour() {
 
             private static final long serialVersionUID = 1L;
@@ -101,6 +95,7 @@ public class AgentSell extends Agent {
                 System.out.println("The Agent " + ag.getName() + " received the product " + et.getTitle() + " with price " + et.getPrice());
             }
         });
+        logger.trace("Ended Method");
     }
 
     private class OfferRequestsServer extends CyclicBehaviour {
@@ -109,6 +104,7 @@ public class AgentSell extends Agent {
 
         @Override
         public void action() {
+            logger.trace("Start Method");
             MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);
             ACLMessage msg = myAgent.receive(mt);
             if (msg != null) {
@@ -133,6 +129,7 @@ public class AgentSell extends Agent {
             } else {
                 block();
             }
+            logger.trace("Ended Method");
         }
     }
 
@@ -142,6 +139,7 @@ public class AgentSell extends Agent {
 
         @Override
         public void action() {
+            logger.trace("Start Method");
             MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
             ACLMessage msg = myAgent.receive(mt);
             if (msg != null) {
@@ -167,6 +165,7 @@ public class AgentSell extends Agent {
             } else {
                 block();
             }
+            logger.trace("Ended Method");
         }
     }
 }
