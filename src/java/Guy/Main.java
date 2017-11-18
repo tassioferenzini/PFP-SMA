@@ -18,7 +18,7 @@ public class Main {
 
         Logger logger = Logger.getLogger("Main");
         logger.trace("Start Method");
-        String[] args = {"java", "php", "c"};
+        String[] args = {"java", "php", "c", "python"};
 
         AgentSell s1 = new AgentSell();
         InitAgent.init(s1, "s1", "Seller");
@@ -31,7 +31,7 @@ public class Main {
         InitAgent.init(s2, "s2", "Seller2");
         Thread.currentThread().sleep(10000);
         s2.updateCatalogue("c", 50);
-        s2.updateCatalogue("php", 80);
+        s2.updateCatalogue("python", 80);
         s2.updateCatalogue("java", 50);
 
         AgentBuy b1 = new AgentBuy();
